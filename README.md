@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
@@ -59,20 +58,166 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
-## Support
+# Introduction
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+This API provides endpoints for user and role management, including authentication, registration, role assignment, and user deletion. It uses NestJS, Prisma, and SQL for backend implementation. They are documented below.
 
-## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Registration
 
-## License
+Description: Registers a new user
 
-Nest is [MIT licensed](LICENSE).
-=======
-# user-role-management
->>>>>>> 82e58d104851fae622d5de25ab1c5dc2021d5411
-# user-role-management
+Endpoint: /auth/register
+
+Method: POST
+
+Request Body:
+
+```bash
+JSON
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+Response:
+
+```bash
+JSON
+{
+  "id": 1,
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com"
+}
+```
+
+## Login
+
+Description: Authenticates a user using their email and password. Returns a JWT token if successful.
+
+Endpoint: /auth/login
+
+Method: POST
+
+Request Body:
+
+```bash
+JSON
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+Response:
+
+```bash
+JSON
+{
+  "token": "your_jwt_token"
+}
+```
+
+
+
+
+## Fetch Users
+
+Description: Fetches a list of all users, including their assigned roles
+
+Endpoint: /users
+
+Method: GET
+
+Response:
+
+```bash
+JSON
+[
+  {
+    "id": 1,
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "roles": [
+      {
+        "id": 1,
+        "name": "Admin"
+      }
+    ]
+  },
+  // ... other users
+]
+```
+
+
+## Delete User
+
+Description: Deletes a user with a specified user ID. Requires the Admin role.
+
+Endpoint: /users/:id
+
+Method: DELETE
+
+
+## Create Role
+
+Description: Creates a new role
+
+Endpoint: /roles
+
+Method: POST
+
+Request Body:
+
+```bash
+JSON
+{
+  "name": "Admin",
+  "permissions": ["READ", "WRITE"]
+}
+```
+
+Response:
+
+```bash
+JSON
+{
+  "id": 142,
+  "name": "userw",
+  "permissions": [
+      "READ"
+  ]
+}
+```
+
+## Assign Role
+
+Description: Assigns a role to a user
+
+Endpoint: /users/:id/assign-role
+
+Method: POST
+
+Request Body:
+
+```bash
+JSON
+{
+  "roleName": "admin"
+}
+```
+
+
+## Authentication and Authorization
+All endpoints except /auth/login and /auth/register require JWT authentication. The RolesGuard is used to enforce role-based access control. Only users with the Admin role can access the /users/:id DELETE endpoint.
+
+## Error Handling
+The API returns appropriate HTTP status codes and error messages for different scenarios, such as invalid credentials, missing required fields, and unauthorized access.
+
+## Security
+Passwords are stored securely using bcrypt hashing. Input validation is performed to prevent security vulnerabilities.
