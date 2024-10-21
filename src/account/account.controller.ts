@@ -69,12 +69,6 @@ export class AccountController {
           new ConflictException('Email already exists'),
         );
       }
-      if (error.name === 'PrismaClientValidationError') {
-        return this.responseService.json(
-          res,
-          new Error('A required field is missing'),
-        );
-      }
       return this.responseService.json(res, error);
     }
   }
